@@ -32,16 +32,21 @@ in-memory state only. Private repo now, AGPL-3.0-or-later when released.
   in the plan.
 - Solve CAPTCHAs, spoof named crawlers, or log in to anything.
 - Add heavy dependencies (headless browsers, databases) without approval.
-- Commit secrets. Turnstile and proxy settings are environment variables only.
+- Commit secrets. Proxy settings are environment variables only.
 
 ## Run locally
 
 ```bash
 python -m venv .venv
-.venv/Scripts/activate        # Windows (Git Bash: source .venv/Scripts/activate)
-pip install -r requirements.txt
+source .venv/Scripts/activate   # Windows Git Bash (.venv/bin/activate on macOS and Linux)
+pip install -r requirements-dev.txt
 uvicorn app.main:app --reload --port 8080
+pytest                          # runs against a scripted fake site, no internet needed
+python -m app.cli example.org --pages 60   # scan from the terminal
 ```
+
+Layout: `app/engine/` is the pipeline (runner, checker, extract, profiler), `app/net/` is the only
+code that talks to the network, `app/scans.py` and `app/api.py` serve the browser, `static/` is the UI.
 
 ## Ask first
 

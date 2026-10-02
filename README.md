@@ -4,7 +4,7 @@ A free tool by [Good Heart Tech](https://goodhearttech.org/) that scans a nonpro
 website for broken links and shows how to fix them. Planned home:
 `links.nonprofittools.org`, alongside the other [Nonprofit Tools](https://nonprofittools.org/).
 
-**Status:** shell repo. The plan is written, the scanner is not built yet.
+**Status:** v1 built. Deploys to Sliplane as one container on port 8080.
 
 ## Start here
 
@@ -12,6 +12,8 @@ website for broken links and shows how to fix them. Planned home:
   security, Docker, milestones, risks, open questions)
 - [docs/BOT-BLOCKING.md](docs/BOT-BLOCKING.md): how we avoid false 403s and what we
   honestly cannot verify
+- [docs/DEPLOY.md](docs/DEPLOY.md): Sliplane settings, environment variables, checks
+- [docs/BOT-BLOCKING-FINDINGS.md](docs/BOT-BLOCKING-FINDINGS.md): first real measurements
 - [AGENTS.md](AGENTS.md): rules for volunteers and AI agents working in this repo
 
 ## Highlights
@@ -24,12 +26,12 @@ website for broken links and shows how to fix them. Planned home:
 - Export to CSV, Markdown, JSON, or print to PDF
 - One Docker container, no storage volume, nothing about your site is saved
 
-## Run the shell locally
+## Run it locally
 
 ```bash
 python -m venv .venv
 source .venv/Scripts/activate   # Windows Git Bash; use .venv/bin/activate on macOS and Linux
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 uvicorn app.main:app --reload --port 8080
 ```
 

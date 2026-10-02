@@ -1,14 +1,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Broken Link Checker: app entry point.
-
-Shell only. Scan routes arrive in Milestone 3, see docs/PLAN.md.
-"""
-import os
+"""Broken Link Checker: app entry point."""
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
+from app.api import router
+from app.scans import MANAGER
+
+VERSION = "1.0.0"
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 
 # The Nonprofit Tools Hub embeds tools in an iframe, so allow only those origins.
@@ -18,10 +19,20 @@ CSP = (
     "style-src 'self'; "
     "script-src 'self'; "
     "connect-src 'self'; "
+    "base-uri 'none'; form-action 'self'; "
     "frame-ancestors https://nonprofittools.org https://*.nonprofittools.org"
 )
 
-app = FastAPI(title="Broken Link Checker", docs_url=None, redoc_url=None)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    MANAGER.start()
+    yield
+    MANAGER.stop()
+
+
+app = FastAPI(title="Broken Link Checker", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
+app.include_router(router)
 
 
 @app.middleware("http")
@@ -30,12 +41,14 @@ async def security_headers(request: Request, call_next):
     response.headers["Content-Security-Policy"] = CSP
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
     return response
 
 
 @app.get("/healthz")
 def healthz():
-    return {"status": "ok", "env": os.getenv("ENV", "production")}
+    return {"status": "ok", "app": "broken-link-checker", "version": VERSION}
 
 
 app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")

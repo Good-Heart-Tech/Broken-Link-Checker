@@ -4,47 +4,151 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Broken Link Checker | Good Heart Tech</title>
-  <meta name="description" content="A free tool from Good Heart Tech that scans your website for broken links and shows you how to fix them.">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="description" content="A free tool from Good Heart Tech that scans your website for broken links and shows you exactly where to fix them.">
+  <link rel="canonical" href="https://links.nonprofittools.org/">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:title" content="Broken Link Checker | Good Heart Tech">
+  <meta property="og:description" content="Free for nonprofits. Find broken links on your website and fix them.">
+  <meta property="og:image" content="https://links.nonprofittools.org/og-card.png">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="/ght-variables.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main class="page">
-    <header class="brand">
-      <img src="/ght-icon.svg" alt="" width="40" height="40">
-      <span>Good Heart Tech</span>
-    </header>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Broken Link Checker home"><img src="/logo.png" alt="Good Heart Tech" height="36"></a>
+    <span class="app-name">Broken Link Checker</span>
+  </header>
 
-    <section class="hero">
+  <main id="main" class="wrap">
+    <noscript><p class="notice">This tool needs JavaScript to run. Please turn it on and reload.</p></noscript>
+
+    <!-- 1. Start -->
+    <section id="start" class="hero">
       <h1>Find broken links on your website</h1>
-      <p class="lead">Paste your website address. We will check every link and show you what needs fixing, and where to find it.</p>
+      <p class="lead">Paste your website address. We check every link and show you what needs fixing and where to find it.</p>
 
-      <form class="scan-form" aria-describedby="status-note" onsubmit="return false">
-        <label for="site-url" class="visually-hidden">Website address</label>
-        <input id="site-url" type="text" inputmode="url" placeholder="yournonprofit.org" disabled>
-        <button type="submit" disabled>Check my site</button>
+      <form id="scan-form" class="scan-form" novalidate>
+        <div class="url-row">
+          <label for="site-url" class="sr-only">Website address</label>
+          <input id="site-url" name="url" type="text" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="yournonprofit.org" required>
+          <button type="submit" class="btn btn-primary">Check my site</button>
+        </div>
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+
+        <div class="choices">
+          <fieldset class="choice-group">
+            <legend>What to check</legend>
+            <label class="choice"><input type="radio" name="scope" value="site" checked><span><strong>Whole website</strong><small>Follows links from page to page</small></span></label>
+            <label class="choice"><input type="radio" name="scope" value="page"><span><strong>One page</strong><small>Just the page you enter</small></span></label>
+          </fieldset>
+          <fieldset class="choice-group">
+            <legend>How careful</legend>
+            <label class="choice"><input type="radio" name="mode" value="quick" checked><span><strong>Quick scan</strong><small>Fast. Best for most sites</small></span></label>
+            <label class="choice"><input type="radio" name="mode" value="thorough"><span><strong>Thorough scan</strong><small>Slower. Double-checks links that block automated tools</small></span></label>
+          </fieldset>
+        </div>
+        <label class="inline-check"><input type="checkbox" id="check-social"> Also try social media links (they often block checks)</label>
       </form>
-      <p id="status-note" class="note">Coming soon. This tool is being built.</p>
+      <p class="privacy">We do not store your results or your site. Everything stays in this browser tab.</p>
     </section>
 
-    <section class="cards" aria-label="What you will get">
-      <article class="card">
-        <h2>A clear fix list</h2>
-        <p>Every broken link with the page it is on and the words or button to look for.</p>
-      </article>
-      <article class="card">
-        <h2>Fewer false alarms</h2>
-        <p>Some sites block automated checks. We tell you which links we could not verify instead of calling them broken.</p>
-      </article>
-      <article class="card">
-        <h2>Free for nonprofits</h2>
-        <p>No sign up. We do not store your results or your site.</p>
-      </article>
+    <!-- 2. Progress -->
+    <section id="progress" class="card progress" hidden aria-labelledby="progress-title">
+      <h2 id="progress-title" tabindex="-1">Scanning</h2>
+      <p id="phase" class="phase"></p>
+      <progress id="bar" max="100" value="0" aria-label="Scan progress"></progress>
+      <dl class="counters">
+        <div><dt>Pages scanned</dt><dd id="c-pages">0</dd></div>
+        <div><dt>Links checked</dt><dd id="c-links">0 of 0</dd></div>
+        <div><dt>Broken</dt><dd id="c-broken">0</dd></div>
+        <div><dt>Could not verify</dt><dd id="c-blocked">0</dd></div>
+        <div><dt>Time</dt><dd id="c-time">0:00</dd></div>
+      </dl>
+      <p class="current"><span class="sr-only">Now checking: </span><span id="current"></span></p>
+      <div class="btn-row">
+        <button type="button" id="pause" class="btn">Pause</button>
+        <button type="button" id="stop" class="btn">Stop and show results</button>
+      </div>
+      <p id="sr-status" class="sr-only" aria-live="polite"></p>
     </section>
 
-    <footer class="foot">
-      <p>A free tool by <a href="https://goodhearttech.org/">Good Heart Tech</a>, a nonprofit helping nonprofits with technology.</p>
-    </footer>
+    <!-- 3. Results -->
+    <section id="results" hidden aria-labelledby="results-title">
+      <div class="results-head">
+        <h2 id="results-title" tabindex="-1">Results</h2>
+        <p id="results-sub" class="muted"></p>
+      </div>
+      <div id="banners"></div>
+      <div id="summary" class="summary"></div>
+
+      <div class="toolbar" role="group" aria-label="Export and actions">
+        <button type="button" id="ex-csv" class="btn">Download CSV</button>
+        <button type="button" id="ex-md" class="btn">Copy for email or ticket</button>
+        <button type="button" id="ex-tsv" class="btn">Copy as table</button>
+        <button type="button" id="ex-json" class="btn">Download JSON</button>
+        <button type="button" id="ex-print" class="btn">Print or save as PDF</button>
+        <label class="inline-check"><input type="checkbox" id="ex-all"> Include working links</label>
+        <span class="spacer"></span>
+        <button type="button" id="recheck" class="btn btn-soft">Re-check problem links</button>
+        <button type="button" id="again" class="btn btn-soft">Scan another site</button>
+      </div>
+      <p id="toast" class="toast" role="status" aria-live="polite"></p>
+
+      <section class="block" aria-labelledby="h-broken">
+        <h3 id="h-broken">Broken links</h3>
+        <p id="platform-tip" class="tip" hidden></p>
+        <div class="controls">
+          <label class="sr-only" for="q">Search results</label>
+          <input id="q" type="search" placeholder="Search links, text, or pages" autocomplete="off">
+          <label class="sr-only" for="filter">Show</label>
+          <select id="filter">
+            <option value="all">All broken links</option>
+            <option value="internal">On your website</option>
+            <option value="external">Other websites</option>
+            <option value="files">Images and files</option>
+          </select>
+          <label class="inline-check"><input type="checkbox" id="group"> Group by broken link</label>
+          <button type="button" id="unignore" class="linkbtn" hidden></button>
+        </div>
+        <div id="t-broken"></div>
+      </section>
+
+      <section class="block" id="sec-blocked" aria-labelledby="h-blocked" hidden>
+        <h3 id="h-blocked">Could not verify</h3>
+        <p class="muted">Some websites refuse automated checks. These links are usually fine. Open one to confirm.</p>
+        <div id="t-blocked"></div>
+      </section>
+
+      <details class="block fold" id="sec-warn">
+        <summary><h3 id="h-warn">Worth a look</h3><span class="count" id="n-warn"></span></summary>
+        <p class="muted">These links work, but could be tidied: moved pages, extra redirects, pages that may be missing.</p>
+        <div id="t-warn"></div>
+      </details>
+
+      <details class="block fold" id="sec-ok">
+        <summary><h3 id="h-ok">Working links</h3><span class="count" id="n-ok"></span></summary>
+        <label class="sr-only" for="q-ok">Search working links</label>
+        <input id="q-ok" type="search" placeholder="Search working links" autocomplete="off">
+        <div id="t-ok"></div>
+        <h4 id="h-skip" hidden>Not checked</h4>
+        <div id="t-skip"></div>
+      </details>
+    </section>
+
+    <section id="failure" class="card" hidden>
+      <h2>We could not scan that</h2>
+      <p id="failure-msg"></p>
+      <button type="button" id="failure-back" class="btn btn-primary">Try again</button>
+    </section>
   </main>
+
+  <footer class="foot">
+    <p>Free for nonprofits. Published by <a href="https://goodhearttech.org/">Good Heart Tech</a>. <a href="https://goodhearttech.org/donate/">Donate</a></p>
+  </footer>
+  <script type="module" src="/app.js"></script>
 </body>
 </html>

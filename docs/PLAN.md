@@ -1,6 +1,7 @@
 # Implementation plan: Free Broken Link Checker
 
-Status: draft for review. Owner: Greg (Good Heart Tech).
+Status: **v1 built** (all milestones M0 to M5 and the code side of M6). Owner: Greg (Good Heart Tech).
+See [DEPLOY.md](DEPLOY.md) to run it on Sliplane and [BOT-BLOCKING-FINDINGS.md](BOT-BLOCKING-FINDINGS.md) for measured results.
 Target home: `links.nonprofittools.org`, listed in the [Nonprofit Tools Hub](https://nonprofittools.org/).
 Repo: private now, AGPL-3.0 later (see [Open source readiness](#13-open-source-readiness)).
 
@@ -55,7 +56,7 @@ problems instead of just listing them.
 | Exports | Generated in the browser from results already on the page | Server never stores or re-serves results |
 | Scan modes | **Quick** (default) and **Thorough** | Speed matters; blocker evasion is slower. User chooses |
 | Result buckets | Broken, Could not verify, Worth a look, Working | Honest reporting is the whole point |
-| Abuse protection | Per-IP rate limit, global scan cap with queue, Cloudflare Turnstile | Public free tool that makes outbound requests |
+| Abuse protection | Per-IP rate limit, global scan cap with a visible queue, per-site pacing. No Turnstile (Greg's call) | Public free tool that makes outbound requests |
 | Hosting | Any Docker host with HTTPS. Sliplane is the likely fit (existing GHT/HH precedent) | Single container, env-var config |
 | License | AGPL-3.0-or-later, applied at open-source time. SPDX headers from day one | Planned |
 
@@ -289,7 +290,7 @@ Broken-Link-Checker/
     config.py          Env vars and defaults in one place
     api.py             Routes: start, events, snapshot, cancel, pause, recheck
     scans.py           Scan lifecycle, in-memory registry, TTL purge, queue
-    limits.py          Per-IP rate limit, global concurrency, Turnstile verify
+    limits.py          Per-IP rate limit and client address lookup
     net/
       urlnorm.py       Normalization, same-site test, dedupe key
       safe_fetch.py    THE ONLY place outbound requests happen. SSRF guard, pinning, manual redirects
@@ -419,10 +420,10 @@ mandatory reading before coding `safe_fetch.py`.
   link-local (including `169.254.169.254` cloud metadata), CGNAT, multicast, reserved, or
   IPv4-mapped IPv6 of any of those. Use Python's `ipaddress` on the resolved result, so
   decimal, octal, and hex IP tricks in the hostname are neutralized.
-- **Pin the connection** to the validated IP (curl `--resolve` equivalent) to defeat DNS
-  rebinding between check and connect. Milestone 1 verifies `curl_cffi` supports this.
-  If it cannot, the fallback is validating the connected peer IP after connect plus an
-  egress network policy on the host.
+- **Pin the connection** to the validated IP (curl `RESOLVE`) to defeat DNS rebinding between
+  check and connect. Verified in M1: `curl_cffi` supports this per session, not per request,
+  so the fetcher keeps one pinned session per host and browser profile. The peer IP is also
+  re-checked after connect.
 - Manual redirects: re-validate scheme, port, and resolved IP on **every** hop.
 - Response caps: max body read (2 MB pages, 64 KB sniff), max headers, max redirect hops,
   decompression bomb guard (cap decoded bytes).
@@ -432,8 +433,7 @@ mandatory reading before coding `safe_fetch.py`.
 ### 8.2 Abuse and politeness
 
 - Per-IP rate limit, global concurrent-scan cap with a visible queue.
-- Cloudflare Turnstile on scan start (free, privacy-friendly, no puzzle for most people).
-  Skippable via env for internal use.
+- No CAPTCHA or Turnstile (decided). If abuse shows up, add one later behind an env switch.
 - Per-target-host rate ceiling regardless of how many scans point at it.
 - Cannot be pointed at our own domains (denylist from env).
 - Honest identity: a custom request header identifying the tool and a contact page
@@ -441,7 +441,7 @@ mandatory reading before coding `safe_fetch.py`.
 
 ### 8.3 Web app security
 
-- Strict CSP (self only, plus Turnstile origin), `X-Content-Type-Options: nosniff`,
+- Strict CSP (self only), `X-Content-Type-Options: nosniff`,
   `Referrer-Policy: strict-origin-when-cross-origin`.
 - `frame-ancestors https://nonprofittools.org https://*.nonprofittools.org` so the Tools
   Hub iframe works but random sites cannot frame it.
@@ -489,14 +489,12 @@ mandatory reading before coding `safe_fetch.py`.
 | `MAX_CONCURRENT_SCANS` / `QUEUE_SIZE` | 3 / 10 | Global capacity |
 | `RATE_LIMIT_PER_HOUR` | 5 | Per-IP scans |
 | `CONCURRENCY_GLOBAL` / `_TARGET` / `_EXTERNAL_HOST` | 40 / 8 / 3 | Request pacing |
-| `TRUST_PROXY` | `cloudflare` | Which header carries the real client IP (`CF-Connecting-IP`) |
-| `TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET` | unset | Enables bot check on scan start |
 | `SCAN_PROXY_URL` | unset | Optional outbound proxy for the Thorough ladder (off by default) |
 | `SCAN_IDENT_HEADER` | unset | Optional identity header value |
 | `DENY_HOSTS` | `nonprofittools.org,goodhearttech.org` | Never scan these |
 | `ALLOW_PRIVATE_TARGETS` | 0 | Tests only; refused in production |
 
-Secrets (Turnstile secret, proxy credentials) go in the host's environment settings,
+Secrets (proxy credentials, if ever used) go in the host's environment settings,
 never in git.
 
 ### 9.3 Sizing and resilience
@@ -562,7 +560,7 @@ Sizes: S is an evening, M is a few evenings, L is a couple of weeks of evenings.
 - Exit: scans the fake site correctly; scans example.org end to end in Quick mode
 
 ### M3. API, SSE, limits (M)
-- [ ] Routes, scan registry, queue, TTL purge, pause and cancel, rate limit, Turnstile
+- [ ] Routes, scan registry, queue, TTL purge, pause and cancel, rate limit
 - Exit: two browsers can scan at once, reconnect resumes, caps enforced
 
 ### M4. Platform profiler and fix helpers (M)
@@ -602,7 +600,7 @@ Sizes: S is an evening, M is a few evenings, L is a couple of weeks of evenings.
 | Our container IP is flagged by WAFs | Cloud IP ranges are often pre-blocked | Measure in M1 from a real cloud host. `SCAN_PROXY_URL` exists for this |
 | JavaScript-rendered sites | Links that exist only after JS runs will not be seen by an HTTP-only crawler (some Wix, Framer, and Google Sites pages) | Show a notice when a page has almost no links but heavy scripts. Sitemap seeding helps. Browser sidecar is v2 |
 | Platform detection is heuristic | Signals change over time | Confidence shown, "Unknown" is fine, signals live in a data file, fixtures catch regressions |
-| Becoming a DDoS toy | Free public fetcher | Per-host ceilings, adaptive backoff, global caps, Turnstile |
+| Becoming a DDoS toy | Free public fetcher | Per-host ceilings, adaptive backoff, global caps |
 | Memory growth | Large pages, many rows | Hard caps on pages, URLs, row size, snippet size, 30 min purge |
 | Restart loses scans | No storage by design | Clear UI message, resume where possible |
 | `curl_cffi` is a native dependency | Wheels track libcurl-impersonate releases | Pin versions, Dependabot, glibc base image, document upgrade steps |
@@ -633,12 +631,12 @@ Do these from day one so flipping the repo public is boring:
 
 | # | Question | Assumed default |
 |---|----------|-----------------|
-| 1 | Subdomain and name | `links.nonprofittools.org`, repo `Broken-Link-Checker`, product name "Broken Link Checker" |
-| 2 | Docker host | Sliplane or any Docker host with custom domain and HTTPS. Confirm which |
-| 3 | Cloudflare Turnstile acceptable (third-party script on a privacy-minded tool)? | Yes, it is the lightest option; env-switchable |
-| 4 | Per-scan caps | 500 pages, 5,000 URLs, 10 min |
+| 1 | Subdomain and name | **Decided:** `links.nonprofittools.org` |
+| 2 | Docker host | **Decided:** Sliplane, published through a Cloudflare tunnel route |
+| 3 | Cloudflare Turnstile | **Decided: not needed** |
+| 4 | Per-scan caps | **Decided:** 5,000 URLs in 10 minutes (500 pages) |
 | 5 | Budget for a rotating or residential outbound proxy | None. Off by default; revisit only if M1 shows IP reputation is the main cause |
 | 6 | Send an identity header so site owners can see who we are | Yes, optional via env |
-| 7 | Font: system stack (BRAND.md) or Noto Sans (current Tools Hub) | System stack, self-hosted nothing, no Google Fonts call. Easy to switch |
+| 7 | Font | **Resolved by the updated brand kit:** system stack, no font files |
 | 8 | Social links (Facebook, Instagram, LinkedIn, X) | Marked "Not checked, social sites block automated checks", toggle to try anyway |
 | 9 | GitHub org | `Good-Heart-Tech`, private |
