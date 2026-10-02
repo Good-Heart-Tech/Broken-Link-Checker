@@ -1,0 +1,24 @@
+{
+  "_note": "Hosts that block or mislead automated checks, and bot-protection signatures. Edit freely. Add a 'verified' date when you confirm an entry so stale ones are easy to spot.",
+  "never_check_by_default": [
+    {"host": "facebook.com", "reason": "Social sites block automated checks", "verified": null},
+    {"host": "instagram.com", "reason": "Social sites block automated checks", "verified": null},
+    {"host": "linkedin.com", "reason": "Returns 999 to automated checks", "verified": null},
+    {"host": "x.com", "reason": "Social sites block automated checks", "verified": null},
+    {"host": "twitter.com", "reason": "Social sites block automated checks", "verified": null},
+    {"host": "tiktok.com", "reason": "Social sites block automated checks", "verified": null}
+  ],
+  "often_blocks_bots": [
+    {"host": "yelp.com", "reason": "Frequently returns 403 to automated checks", "verified": null}
+  ],
+  "block_like_statuses": [401, 403, 406, 418, 429, 503, 520, 521, 522, 523, 524, 525, 526, 527, 530, 999],
+  "waf_signatures": [
+    {"vendor": "Cloudflare", "headers": {"cf-mitigated": "challenge", "server": "cloudflare"}, "body": ["Just a moment", "Attention Required", "cf-chl"]},
+    {"vendor": "Imperva", "headers": {"x-iinfo": "", "x-cdn": "Imperva"}, "body": ["Request unsuccessful. Incapsula incident ID"]},
+    {"vendor": "Akamai", "headers": {"server": "AkamaiGHost"}, "body": ["Access Denied"]},
+    {"vendor": "DataDome", "headers": {"x-datadome": ""}, "body": ["captcha-delivery.com"]},
+    {"vendor": "HUMAN (PerimeterX)", "headers": {"x-px-": ""}, "body": ["Press & Hold"]},
+    {"vendor": "Sucuri", "headers": {"x-sucuri-id": ""}, "body": ["Sucuri Website Firewall"]},
+    {"vendor": "AWS WAF", "headers": {"x-amzn-waf-action": ""}, "body": []}
+  ]
+}

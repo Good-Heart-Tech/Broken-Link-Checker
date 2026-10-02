@@ -1,0 +1,46 @@
+# Broken Link Checker
+
+A free tool by [Good Heart Tech](https://goodhearttech.org/) that scans a nonprofit's
+website for broken links and shows how to fix them. Planned home:
+`links.nonprofittools.org`, alongside the other [Nonprofit Tools](https://nonprofittools.org/).
+
+**Status:** shell repo. The plan is written, the scanner is not built yet.
+
+## Start here
+
+- [docs/PLAN.md](docs/PLAN.md): full implementation plan (UX, pipeline, architecture,
+  security, Docker, milestones, risks, open questions)
+- [docs/BOT-BLOCKING.md](docs/BOT-BLOCKING.md): how we avoid false 403s and what we
+  honestly cannot verify
+- [AGENTS.md](AGENTS.md): rules for volunteers and AI agents working in this repo
+
+## Highlights
+
+- Quick scan and Thorough scan modes (Thorough double-checks sites that block automated tools)
+- Separates **Broken** from **Could not verify** so bot blockers do not look like dead links
+- Detects the site platform (WordPress, Wix, Squarespace, Shopify, and more) to crawl
+  smarter and give platform-specific fix steps
+- Results table with the page, link text, and status; working links collapsed below
+- Export to CSV, Markdown, JSON, or print to PDF
+- One Docker container, no storage volume, nothing about your site is saved
+
+## Run the shell locally
+
+```bash
+python -m venv .venv
+source .venv/Scripts/activate   # Windows Git Bash; use .venv/bin/activate on macOS and Linux
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8080
+```
+
+Then open <http://localhost:8080>. Health check: `/healthz`.
+
+```bash
+docker build -t broken-link-checker .
+docker run --rm -p 8080:8080 broken-link-checker
+```
+
+## License
+
+Private for now. Planned release under AGPL-3.0-or-later (see the open source checklist in
+the plan). The Good Heart Tech name and logo remain trademarks of Good Heart Tech.

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Broken Link Checker | Good Heart Tech</title>
+  <meta name="description" content="A free tool from Good Heart Tech that scans your website for broken links and shows you how to fix them.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="page">
+    <header class="brand">
+      <img src="/ght-icon.svg" alt="" width="40" height="40">
+      <span>Good Heart Tech</span>
+    </header>
+
+    <section class="hero">
+      <h1>Find broken links on your website</h1>
+      <p class="lead">Paste your website address. We will check every link and show you what needs fixing, and where to find it.</p>
+
+      <form class="scan-form" aria-describedby="status-note" onsubmit="return false">
+        <label for="site-url" class="visually-hidden">Website address</label>
+        <input id="site-url" type="text" inputmode="url" placeholder="yournonprofit.org" disabled>
+        <button type="submit" disabled>Check my site</button>
+      </form>
+      <p id="status-note" class="note">Coming soon. This tool is being built.</p>
+    </section>
+
+    <section class="cards" aria-label="What you will get">
+      <article class="card">
+        <h2>A clear fix list</h2>
+        <p>Every broken link with the page it is on and the words or button to look for.</p>
+      </article>
+      <article class="card">
+        <h2>Fewer false alarms</h2>
+        <p>Some sites block automated checks. We tell you which links we could not verify instead of calling them broken.</p>
+      </article>
+      <article class="card">
+        <h2>Free for nonprofits</h2>
+        <p>No sign up. We do not store your results or your site.</p>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <p>A free tool by <a href="https://goodhearttech.org/">Good Heart Tech</a>, a nonprofit helping nonprofits with technology.</p>
+    </footer>
+  </main>
+</body>
+</html>

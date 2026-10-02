@@ -1,0 +1,149 @@
+/* Good Heart Tech brand tokens.
+   Source of truth: Good-Heart-Tech-Branding-Marketing/tokens/colors.css
+   Do not add a second palette. Status colors are proposed extensions, see docs/PLAN.md 3.7. */
+:root {
+  --ght-primary: #7189FF;
+  --ght-charcoal: #394053;
+  --ght-light-blue: #A0DDFF;
+  --ght-neutral: #808080;
+  --ght-rich-black: #091D20;
+  --ght-white: #FFFFFF;
+  --ght-hudu-primary: #586CD0;
+  --ght-hudu-light: #D6DDFF;
+
+  --radius: 16px;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ght-charcoal);
+  background: var(--ght-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  color: var(--ght-rich-black);
+}
+
+.hero {
+  text-align: center;
+  padding: 4.5rem 0 3rem;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.9rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  color: var(--ght-rich-black);
+}
+
+.lead {
+  max-width: 34rem;
+  margin: 0 auto 2rem;
+  font-size: 1.125rem;
+}
+
+.scan-form {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.scan-form input {
+  flex: 1;
+  padding: 0.9rem 1.1rem;
+  font: inherit;
+  color: var(--ght-rich-black);
+  background: var(--ght-white);
+  border: 2px solid var(--ght-hudu-light);
+  border-radius: 999px;
+}
+
+.scan-form input:focus-visible,
+.scan-form button:focus-visible {
+  outline: 3px solid var(--ght-primary);
+  outline-offset: 2px;
+}
+
+.scan-form button {
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ght-white);
+  background: var(--ght-primary);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.scan-form button:hover:not(:disabled) { background: var(--ght-hudu-primary); }
+.scan-form button:disabled,
+.scan-form input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.note {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--ght-neutral);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--ght-hudu-light) 35%, white);
+  border: 1px solid var(--ght-hudu-light);
+  border-radius: var(--radius);
+}
+
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: var(--ght-rich-black);
+}
+
+.card p { margin: 0; }
+
+.foot {
+  margin-top: 4rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+a { color: var(--ght-hudu-primary); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .scan-form { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

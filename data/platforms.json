@@ -1,0 +1,168 @@
+{
+  "_note": "Starter signals. Treat as a first draft and validate against real sites in Milestone 4. Edit freely: no code changes needed. 'html' entries are case-insensitive substrings of the page source. 'headers' maps a response header name to a substring. 'generator' matches the meta generator tag.",
+  "platforms": [
+    {
+      "id": "wordpress",
+      "name": "WordPress",
+      "generator": ["WordPress"],
+      "html": ["/wp-content/", "/wp-includes/"],
+      "headers": {"link": "api.w.org", "x-pingback": ""},
+      "sitemap_paths": ["/wp-sitemap.xml", "/sitemap.xml", "/sitemap_index.xml"],
+      "ignore_patterns": ["/wp-admin", "/wp-login.php", "/wp-json", "/xmlrpc.php", "/feed/", "?replytocom=", "?share="],
+      "fix_steps": "In WordPress, go to Pages (or Posts), open the page, click the link text, and use the link icon to edit or remove it. Menu and footer links are under Appearance, Menus, or in the Site Editor."
+    },
+    {
+      "id": "wix",
+      "name": "Wix",
+      "generator": ["Wix.com"],
+      "html": ["static.parastorage.com", "static.wixstatic.com"],
+      "headers": {"x-wix-request-id": "", "server": "Pepyaka"},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["?lang="],
+      "fix_steps": "In the Wix Editor, open the page, click the text or button, click the link icon, and update or remove the link. Menu links are in the Menus and Pages panel."
+    },
+    {
+      "id": "squarespace",
+      "name": "Squarespace",
+      "generator": ["Squarespace"],
+      "html": ["static1.squarespace.com", "squarespace-cdn.com"],
+      "headers": {"server": "Squarespace"},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["?format=json", "?format=json-pretty"],
+      "fix_steps": "In Squarespace, open the page, click Edit, select the text or button, and click the link icon. Navigation links are under Pages, in the Main Navigation section. Footer content is edited by clicking Edit Footer."
+    },
+    {
+      "id": "shopify",
+      "name": "Shopify",
+      "generator": [],
+      "html": ["cdn.shopify.com", "Shopify.theme"],
+      "headers": {"x-shopid": "", "x-shopify-stage": ""},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["/cart", "/checkout", "/account", "?variant="],
+      "pacing": "gentle",
+      "fix_steps": "In Shopify admin, use Online Store, then Pages for page content, Navigation for menus, and Themes, then Customize for theme sections."
+    },
+    {
+      "id": "weebly",
+      "name": "Weebly",
+      "generator": ["Weebly"],
+      "html": ["editmysite.com", "weebly.com"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "fix_steps": "In the Weebly editor, open the page, click the text or button, and edit the link in its settings. Menu links are under Pages."
+    },
+    {
+      "id": "google-sites",
+      "name": "Google Sites",
+      "generator": [],
+      "html": ["gstatic.com/atari", "sites.google.com"],
+      "headers": {},
+      "sitemap_paths": [],
+      "ignore_patterns": [],
+      "js_heavy": true,
+      "fix_steps": "In Google Sites, open the page in edit mode, select the text or button, and click the link icon. Navigation menu links are under Pages."
+    },
+    {
+      "id": "webflow",
+      "name": "Webflow",
+      "generator": ["Webflow"],
+      "html": ["data-wf-site", "website-files.com"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "fix_steps": "In Webflow Designer, open the page, select the element, and update the link in Element Settings."
+    },
+    {
+      "id": "godaddy",
+      "name": "GoDaddy Websites",
+      "generator": ["Starfield Technologies", "GoDaddy"],
+      "html": ["img1.wsimg.com", "wsimg.com"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "fix_steps": "In GoDaddy Websites and Marketing, click Edit Site, select the text or button, and edit the link."
+    },
+    {
+      "id": "drupal",
+      "name": "Drupal",
+      "generator": ["Drupal"],
+      "html": ["/sites/default/files", "drupal-settings-json"],
+      "headers": {"x-generator": "Drupal"},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["/user/login", "/admin"],
+      "fix_steps": "In Drupal, log in, use Content to find the page, edit it, and update the link. Menus are under Structure, then Menus."
+    },
+    {
+      "id": "joomla",
+      "name": "Joomla",
+      "generator": ["Joomla"],
+      "html": ["/media/jui/", "/media/system/js/"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["/administrator"],
+      "fix_steps": "In Joomla, use Content, then Articles to edit pages, and Menus for navigation links."
+    },
+    {
+      "id": "hubspot-cms",
+      "name": "HubSpot CMS",
+      "generator": ["HubSpot"],
+      "html": ["hs-scripts.com", "hubspotusercontent"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "fix_steps": "In HubSpot, go to Content, then Website Pages, edit the page, click the link, and update it. Menus are under Settings, Website, Navigation."
+    },
+    {
+      "id": "duda",
+      "name": "Duda",
+      "generator": [],
+      "html": ["multiscreensite.com", "irp.cdn-website.com"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "fix_steps": "In the Duda editor, open the page, click the element, and edit its link."
+    },
+    {
+      "id": "framer",
+      "name": "Framer",
+      "generator": ["Framer"],
+      "html": ["framerusercontent.com"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "js_heavy": true,
+      "fix_steps": "In Framer, open the page, select the element, and update its link in the right-hand panel."
+    },
+    {
+      "id": "ghost",
+      "name": "Ghost",
+      "generator": ["Ghost"],
+      "html": ["/content/images/"],
+      "headers": {"x-powered-by": "Express"},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["/ghost/"],
+      "fix_steps": "In Ghost, open the post or page in the editor and edit the link. Navigation is under Settings, Navigation."
+    },
+    {
+      "id": "blogger",
+      "name": "Blogger",
+      "generator": ["blogger"],
+      "html": ["blogger.com", "blogspot.com"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": ["?m=1"],
+      "fix_steps": "In Blogger, open Posts or Pages, edit the item, and update the link. Menu links are under Layout."
+    },
+    {
+      "id": "wild-apricot",
+      "name": "Wild Apricot",
+      "generator": [],
+      "html": ["wildapricot.org", "WaGadget"],
+      "headers": {},
+      "sitemap_paths": ["/sitemap.xml"],
+      "ignore_patterns": [],
+      "fix_steps": "In Wild Apricot, open the Website tab, then Site pages, edit the page, and update the link. Menus are under Website, Menus."
+    }
+  ]
+}
