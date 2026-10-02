@@ -48,6 +48,10 @@ python -m app.cli example.org --pages 60   # scan from the terminal
 Layout: `app/engine/` is the pipeline (runner, checker, extract, profiler), `app/net/` is the only
 code that talks to the network, `app/scans.py` and `app/api.py` serve the browser, `static/` is the UI.
 
+## Cache note
+
+Cloudflare keeps CSS and JS for up to 4 hours no matter what the app says. When you change `styles.css`, `app.js` or `embed.js`, bump the `?v=` number on their tags in `static/index.html` so visitors get the new file at once.
+
 ## Ask first
 
 - Changing limits, the status taxonomy, or the SSRF rules.
