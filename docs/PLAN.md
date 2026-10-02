@@ -491,7 +491,7 @@ mandatory reading before coding `safe_fetch.py`.
 | `CONCURRENCY_GLOBAL` / `_TARGET` / `_EXTERNAL_HOST` | 40 / 8 / 3 | Request pacing |
 | `SCAN_PROXY_URL` | unset | Optional outbound proxy for the Thorough ladder (off by default) |
 | `SCAN_IDENT_HEADER` | unset | Optional identity header value |
-| `DENY_HOSTS` | `nonprofittools.org,goodhearttech.org` | Never scan these |
+| `DENY_HOSTS` | `links.nonprofittools.org` | Never scan these (the tool itself) |
 | `ALLOW_PRIVATE_TARGETS` | 0 | Tests only; refused in production |
 
 Secrets (proxy credentials, if ever used) go in the host's environment settings,

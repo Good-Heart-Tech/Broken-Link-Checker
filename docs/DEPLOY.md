@@ -42,7 +42,7 @@ Browser -> Cloudflare -> published application route (tunnel) -> Sliplane contai
 | `THOROUGH_HOST_BUDGET_SECONDS` | 60 | Time Thorough mode spends per blocked site |
 | `SCAN_PROXY_URL` | unset | Optional outbound proxy for Thorough mode only |
 | `SCAN_IDENT_HEADER` | unset | Adds an `X-Scanner` header so site owners can identify us |
-| `DENY_HOSTS` | `nonprofittools.org,goodhearttech.org` | Never scan these |
+| `DENY_HOSTS` | `links.nonprofittools.org` | Never scan these (the tool itself, so it cannot scan itself in a loop). Your own domains are fine to scan |
 | `PORT` | 8080 | Listen port |
 
 Never set `ALLOW_PRIVATE_TARGETS`. It exists for tests and the app refuses to start with it when

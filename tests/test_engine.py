@@ -113,7 +113,7 @@ def test_api_flow(site):
         assert client.get("/api/scans/nope").status_code == 404
         bad = client.post("/api/scans", json={"url": "not a url"})
         assert bad.status_code == 400
-        denied = client.post("/api/scans", json={"url": "https://nonprofittools.org"})
+        denied = client.post("/api/scans", json={"url": "https://links.nonprofittools.org"})
         assert denied.status_code == 400
         rc = client.post("/api/recheck", json={"items": [{"target": site.url + "missing", "page": site.url}], "site": site.url})
         assert rc.status_code == 200

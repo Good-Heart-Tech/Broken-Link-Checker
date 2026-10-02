@@ -31,7 +31,7 @@ class Config:
     thorough_host_budget_seconds: int = 60
     proxy_url: str = ""
     ident_header: str = ""
-    deny_hosts: tuple[str, ...] = ("nonprofittools.org", "goodhearttech.org")
+    deny_hosts: tuple[str, ...] = ("links.nonprofittools.org",)
     allow_private_targets: bool = False
     recheck_max: int = 200
 
@@ -56,7 +56,7 @@ def load() -> Config:
         thorough_host_budget_seconds=_int("THOROUGH_HOST_BUDGET_SECONDS", 60),
         proxy_url=os.getenv("SCAN_PROXY_URL", ""),
         ident_header=os.getenv("SCAN_IDENT_HEADER", ""),
-        deny_hosts=_list("DENY_HOSTS", "nonprofittools.org,goodhearttech.org"),
+        deny_hosts=_list("DENY_HOSTS", "links.nonprofittools.org"),
         allow_private_targets=allow_private,
     )
 
