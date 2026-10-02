@@ -14,52 +14,53 @@
   <meta property="og:image" content="https://links.nonprofittools.org/og-card.png">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="/ght-variables.css">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/vendor/fontawesome/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/vendor/fontawesome/css/solid.min.css">
+  <link rel="stylesheet" href="/styles.css?v=2">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Broken Link Checker home"><img src="/logo.png" alt="Good Heart Tech" height="36"></a>
-    <span class="app-name">Broken Link Checker</span>
-  </header>
 
   <main id="main" class="wrap">
     <noscript><p class="notice">This tool needs JavaScript to run. Please turn it on and reload.</p></noscript>
 
-    <!-- 1. Search bar: always at the top -->
+    <!-- 1. Title -->
+    <section id="start" class="hero">
+      <span class="hero-icon" aria-hidden="true"><i class="fa-solid fa-link-slash"></i></span>
+      <h1>Find <span class="accent">broken links</span> on your website</h1>
+      <p class="lead">Paste your website address below. We check every link and show you what needs fixing and where to find it.</p>
+      <p class="privacy"><i class="fa-solid fa-lock" aria-hidden="true"></i> We do not store your results or your site. Everything stays in this browser tab.</p>
+    </section>
+
+    <!-- 2. Search bar -->
     <div class="searchbar">
       <form id="scan-form" class="scan-form" novalidate autocomplete="off">
         <label for="site-url" class="sr-only">Website address</label>
         <input id="site-url" name="site" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="yournonprofit.org" required>
-        <button type="submit" id="scan-btn" class="btn btn-primary">Scan</button>
+        <button type="submit" id="scan-btn" class="btn btn-primary"><i id="scan-icon" class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> <span id="scan-label">Scan</span></button>
       </form>
       <p id="form-error" class="form-error" role="alert" hidden></p>
     </div>
 
+    <!-- 3. Options -->
     <details id="options" class="options" open>
-      <summary>Scan options</summary>
+      <summary><i class="fa-solid fa-sliders" aria-hidden="true"></i> Scan options</summary>
       <div class="choices">
         <fieldset class="choice-group">
           <legend>What to check</legend>
-          <label class="choice"><input form="scan-form" type="radio" name="scope" value="site" checked><span><strong>Whole website</strong><small>Follows links from page to page</small></span></label>
-          <label class="choice"><input form="scan-form" type="radio" name="scope" value="page"><span><strong>One page</strong><small>Just the page you enter</small></span></label>
+          <label class="choice"><input form="scan-form" type="radio" name="scope" value="site" checked><i class="fa-solid fa-sitemap choice-icon" aria-hidden="true"></i><span><strong>Whole website</strong><small>Follows links from page to page</small></span></label>
+          <label class="choice"><input form="scan-form" type="radio" name="scope" value="page"><i class="fa-solid fa-file-lines choice-icon" aria-hidden="true"></i><span><strong>One page</strong><small>Just the page you enter</small></span></label>
         </fieldset>
         <fieldset class="choice-group">
           <legend>How careful</legend>
-          <label class="choice"><input form="scan-form" type="radio" name="mode" value="quick" checked><span><strong>Quick scan</strong><small>Fast. Best for most sites</small></span></label>
-          <label class="choice"><input form="scan-form" type="radio" name="mode" value="thorough"><span><strong>Thorough scan</strong><small>Slower. Double-checks links that block automated tools</small></span></label>
+          <label class="choice"><input form="scan-form" type="radio" name="mode" value="quick" checked><i class="fa-solid fa-bolt choice-icon" aria-hidden="true"></i><span><strong>Quick scan</strong><small>Fast. Best for most sites</small></span></label>
+          <label class="choice"><input form="scan-form" type="radio" name="mode" value="thorough"><i class="fa-solid fa-microscope choice-icon" aria-hidden="true"></i><span><strong>Thorough scan</strong><small>Slower. Double-checks links that block automated tools</small></span></label>
         </fieldset>
       </div>
-      <label class="inline-check"><input form="scan-form" type="checkbox" id="check-social"> Also try social media links (they often block checks)</label>
+      <label class="inline-check"><input form="scan-form" type="checkbox" id="check-social"> <i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Also try social media links (they often block checks)</label>
     </details>
 
-    <section id="start" class="hero">
-      <h1>Find broken links on your website</h1>
-      <p class="lead">Paste your website address above. We check every link and show you what needs fixing and where to find it.</p>
-      <p class="privacy">We do not store your results or your site. Everything stays in this browser tab.</p>
-    </section>
-
-    <!-- 2. Progress -->
+    <!-- 4. Progress -->
     <section id="progress" class="card progress" hidden aria-labelledby="progress-title">
       <h2 id="progress-title" tabindex="-1">Scanning</h2>
       <p id="phase" class="phase"></p>
@@ -73,13 +74,13 @@
       </dl>
       <p class="current"><span class="sr-only">Now checking: </span><span id="current"></span></p>
       <div class="btn-row">
-        <button type="button" id="pause" class="btn">Pause</button>
-        <button type="button" id="stop" class="btn">Stop and show results</button>
+        <button type="button" id="pause" class="btn"><i class="fa-solid fa-pause" aria-hidden="true"></i> <span id="pause-label">Pause</span></button>
+        <button type="button" id="stop" class="btn"><i class="fa-solid fa-stop" aria-hidden="true"></i> Stop and show results</button>
       </div>
       <p id="sr-status" class="sr-only" aria-live="polite"></p>
     </section>
 
-    <!-- 3. Results -->
+    <!-- 5. Results -->
     <section id="results" hidden aria-labelledby="results-title">
       <div class="results-head">
         <h2 id="results-title" tabindex="-1">Results</h2>
@@ -89,19 +90,19 @@
       <div id="summary" class="summary"></div>
 
       <div class="toolbar" role="group" aria-label="Export and actions">
-        <button type="button" id="ex-csv" class="btn">Download CSV</button>
-        <button type="button" id="ex-md" class="btn">Copy for email or ticket</button>
-        <button type="button" id="ex-tsv" class="btn">Copy as table</button>
-        <button type="button" id="ex-json" class="btn">Download JSON</button>
-        <button type="button" id="ex-print" class="btn">Print or save as PDF</button>
+        <button type="button" id="ex-csv" class="btn"><i class="fa-solid fa-file-csv" aria-hidden="true"></i> Download CSV</button>
+        <button type="button" id="ex-md" class="btn"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Copy for email or ticket</button>
+        <button type="button" id="ex-tsv" class="btn"><i class="fa-solid fa-table" aria-hidden="true"></i> Copy as table</button>
+        <button type="button" id="ex-json" class="btn"><i class="fa-solid fa-code" aria-hidden="true"></i> Download JSON</button>
+        <button type="button" id="ex-print" class="btn"><i class="fa-solid fa-print" aria-hidden="true"></i> Print or save as PDF</button>
         <label class="inline-check"><input type="checkbox" id="ex-all"> Include working links</label>
         <span class="spacer"></span>
-        <button type="button" id="recheck" class="btn btn-soft">Re-check problem links</button>
+        <button type="button" id="recheck" class="btn btn-soft"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Re-check problem links</button>
       </div>
       <p id="toast" class="toast" role="status" aria-live="polite"></p>
 
       <section class="block" aria-labelledby="h-broken">
-        <h3 id="h-broken">Broken links</h3>
+        <h3 id="h-broken"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> <span id="h-broken-text">Broken links</span></h3>
         <p id="platform-tip" class="tip" hidden></p>
         <div class="controls">
           <label class="sr-only" for="q">Search results</label>
@@ -120,19 +121,19 @@
       </section>
 
       <section class="block" id="sec-blocked" aria-labelledby="h-blocked" hidden>
-        <h3 id="h-blocked">Could not verify</h3>
+        <h3 id="h-blocked"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Could not verify</h3>
         <p class="muted">Some websites refuse automated checks. These links are usually fine. Open one to confirm.</p>
         <div id="t-blocked"></div>
       </section>
 
       <details class="block fold" id="sec-warn">
-        <summary><h3 id="h-warn">Worth a look</h3><span class="count" id="n-warn"></span></summary>
+        <summary><h3 id="h-warn"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Worth a look</h3><span class="count" id="n-warn"></span></summary>
         <p class="muted">These links work, but could be tidied: moved pages, extra redirects, pages that may be missing.</p>
         <div id="t-warn"></div>
       </details>
 
       <details class="block fold" id="sec-ok">
-        <summary><h3 id="h-ok">Working links</h3><span class="count" id="n-ok"></span></summary>
+        <summary><h3 id="h-ok"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Working links</h3><span class="count" id="n-ok"></span></summary>
         <label class="sr-only" for="q-ok">Search working links</label>
         <input id="q-ok" name="filter-ok" type="search" placeholder="Search working links" autocomplete="off" data-lpignore="true">
         <div id="t-ok"></div>
@@ -142,9 +143,9 @@
     </section>
 
     <section id="failure" class="card" hidden>
-      <h2>We could not scan that</h2>
+      <h2><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> We could not scan that</h2>
       <p id="failure-msg"></p>
-      <button type="button" id="failure-back" class="btn">Edit the address</button>
+      <button type="button" id="failure-back" class="btn"><i class="fa-solid fa-pen" aria-hidden="true"></i> Edit the address</button>
     </section>
   </main>
 
@@ -153,16 +154,13 @@
     <div class="ght-footer-row">
       <a class="ght-footer-logo" href="https://goodhearttech.org/"><img src="/logo.png" alt="Good Heart Tech" height="30"></a>
       <span class="ght-footer-copy">&copy; <span id="ght-year">2026</span> All rights reserved.</span>
-      <a class="ght-footer-donate" href="https://goodhearttech.org/donate/">
-        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        Donate
-      </a>
+      <a class="ght-footer-donate" href="https://goodhearttech.org/donate/"><i class="fa-solid fa-heart" aria-hidden="true"></i> Donate</a>
       <a class="ght-footer-github" href="https://github.com/Good-Heart-Tech" aria-label="Good Heart Tech on GitHub">
         <svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
       </a>
     </div>
   </footer>
-  <script src="/embed.js"></script>
-  <script type="module" src="/app.js"></script>
+  <script src="/embed.js?v=2"></script>
+  <script type="module" src="/app.js?v=2"></script>
 </body>
 </html>

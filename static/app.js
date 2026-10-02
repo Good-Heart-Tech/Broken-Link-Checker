@@ -11,7 +11,7 @@ const PHASES = {
   second_chance: "Double-checking links that blocked our first try",
 };
 const KINDS = { a: "Link", area: "Link", img: "Image", script: "Script", link: "Stylesheet", iframe: "Frame", video: "Media", audio: "Media", source: "Media", sitemap: "Sitemap" };
-const ICON = { broken: "✕", blocked: "?", warning: "!", ok: "✓", skipped: "–" };
+const ICON = { broken: "fa-xmark", blocked: "fa-question", warning: "fa-exclamation", ok: "fa-check", skipped: "fa-minus" };
 const FILE_EXT = /\.(?:jpe?g|png|gif|webp|svg|ico|avif|css|js|pdf|docx?|xlsx?|pptx?|zip|mp[34]|woff2?)$/i;
 
 function h(tag, attrs = {}, ...kids) {
@@ -39,7 +39,6 @@ function fresh() {
 
 // ---------- views ----------
 function show(view) {
-  $("start").hidden = view !== "start";
   $("progress").hidden = view !== "progress";
   $("results").hidden = !(view === "results" || (view === "progress" && S.rows.length > 0));
   $("failure").hidden = view !== "failure";
@@ -51,7 +50,9 @@ function toast(msg) { $("toast").textContent = msg; $("sr-status").textContent =
 const normHost = (v) => { try { return new URL(/^https?:\/\//i.test(v) ? v : "https://" + v).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
 function updateButton() {
   const typed = $("site-url").value.trim();
-  $("scan-btn").textContent = S.site && typed && normHost(typed) === normHost(S.site) ? "Scan again" : "Scan";
+  const again = S.site && typed && normHost(typed) === normHost(S.site);
+  $("scan-label").textContent = again ? "Scan again" : "Scan";
+  $("scan-icon").className = again ? "fa-solid fa-rotate" : "fa-solid fa-magnifying-glass";
 }
 $("site-url").addEventListener("input", updateButton);
 
@@ -113,7 +114,7 @@ function begin(id, title, position) {
   $("c-links").textContent = "0 of 0";
   $("c-time").textContent = "0:00";
   $("current").textContent = "";
-  $("pause").textContent = "Pause";
+  $("pause-label").textContent = "Pause";
   $("pause").disabled = $("stop").disabled = false;
   show("progress");
   $("progress-title").focus();
@@ -171,7 +172,7 @@ $("pause").addEventListener("click", async () => {
   if (!S.id) return;
   const resume = S.paused;
   await fetch(`/api/scans/${S.id}/${resume ? "resume" : "pause"}`, { method: "POST" });
-  $("pause").textContent = resume ? "Pause" : "Resume";
+  $("pause-label").textContent = resume ? "Pause" : "Resume";
 });
 $("stop").addEventListener("click", async () => {
   if (!S.id) return;
@@ -265,7 +266,7 @@ function render() {
   if (!broken.length) tb.replaceChildren(h("p", { class: "empty" }, S.done ? "No broken links found. Nice work." : "No broken links so far."));
   else if (!shown.length) tb.replaceChildren(h("p", { class: "muted" }, "Nothing matches your search."));
   else tb.replaceChildren($("group").checked ? groupView(shown) : rowTable(shown, "broken"));
-  $("h-broken").textContent = broken.length ? `Broken links (${plural(uniq(broken), "link", "links")} in ${plural(broken.length, "place", "places")})` : "Broken links";
+  $("h-broken-text").textContent = broken.length ? `Broken links (${plural(uniq(broken), "link", "links")} in ${plural(broken.length, "place", "places")})` : "Broken links";
 
   // could not verify
   $("sec-blocked").hidden = !blocked.length;
@@ -282,7 +283,7 @@ function render() {
 function stat(label, value, cls) { return h("div", { class: `stat ${cls}` }, h("b", { text: value }), h("span", { text: label })); }
 
 function badge(r) {
-  return h("span", { class: `badge b-${r.bucket}` }, h("i", { "aria-hidden": "true", text: ICON[r.bucket] }), r.title);
+  return h("span", { class: `badge b-${r.bucket}` }, h("i", { "aria-hidden": "true", class: `fa-solid ${ICON[r.bucket]}` }), r.title);
 }
 
 function copyBtn(text, label = "Copy link") {
@@ -376,7 +377,7 @@ function renderOk(ok, skipped) {
       h("thead", {}, h("tr", {}, ...["Link", "Result", "Used on"].map((t) => h("th", { scope: "col", text: t })))),
       h("tbody", {}, m.slice(0, limit).map((r) => h("tr", {},
         h("td", { "data-label": "Link" }, h("a", { href: r.target, target: "_blank", rel: "noopener noreferrer", text: r.target })),
-        h("td", { "data-label": "Result" }, h("span", { class: `badge b-${r.bucket}` }, h("i", { "aria-hidden": "true", text: ICON[r.bucket] }), r.title)),
+        h("td", { "data-label": "Result" }, h("span", { class: `badge b-${r.bucket}` }, h("i", { "aria-hidden": "true", class: `fa-solid ${ICON[r.bucket]}` }), r.title)),
         h("td", { "data-label": "Used on", text: plural(r.pages || 0, "page", "pages") }))))));
     if (m.length > limit) frag.append(h("p", { class: "more" }, h("button", { type: "button", class: "btn", onclick: () => { S.limit[key] = limit + 300; render(); } }, "Show more")));
     return frag;

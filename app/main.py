@@ -41,8 +41,14 @@ async def security_headers(request: Request, call_next):
     response.headers["Content-Security-Policy"] = CSP
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    if request.url.path.startswith("/api/"):
+    path = request.url.path
+    if path.startswith("/api/"):
         response.headers["Cache-Control"] = "no-store"
+    elif path.endswith((".png", ".ico", ".woff2")):
+        response.headers["Cache-Control"] = "public, max-age=86400"
+    else:
+        # Pages, scripts and styles: always ask the server if they changed, so updates show up right away
+        response.headers["Cache-Control"] = "no-cache"
     return response
 
 
