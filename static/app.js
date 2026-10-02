@@ -46,9 +46,35 @@ function show(view) {
 }
 function toast(msg) { $("toast").textContent = msg; $("sr-status").textContent = msg; }
 
-// ---------- start ----------
-$("scan-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
+// ---------- search bar ----------
+// The button says "Scan again" when the address is the site we just scanned, otherwise "Scan".
+const normHost = (v) => { try { return new URL(/^https?:\/\//i.test(v) ? v : "https://" + v).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
+function updateButton() {
+  const typed = $("site-url").value.trim();
+  $("scan-btn").textContent = S.site && typed && normHost(typed) === normHost(S.site) ? "Scan again" : "Scan";
+}
+$("site-url").addEventListener("input", updateButton);
+
+// Clear everything from the previous scan so nothing old is left on the page.
+function wipe() {
+  if (S.es) S.es.close();
+  if (S.id && !S.done) fetch(`/api/scans/${S.id}/cancel`, { method: "POST" }).catch(() => {});
+  Object.assign(S, fresh());
+  for (const id of ["t-broken", "t-blocked", "t-warn", "t-ok", "t-skip", "banners", "summary"]) $(id).replaceChildren();
+  $("q").value = "";
+  $("q-ok").value = "";
+  $("filter").value = "all";
+  $("group").checked = false;
+  $("ex-all").checked = false;
+  $("toast").textContent = "";
+  $("platform-tip").hidden = true;
+  $("unignore").hidden = true;
+  document.querySelectorAll("details.fold").forEach((d) => (d.open = false));
+}
+
+$("scan-form").addEventListener("submit", (e) => { e.preventDefault(); startScan(); });
+
+async function startScan() {
   const url = $("site-url").value.trim();
   const err = $("form-error");
   err.hidden = true;
@@ -57,18 +83,23 @@ $("scan-form").addEventListener("submit", async (e) => {
     url, scope: document.querySelector("input[name=scope]:checked").value,
     mode: document.querySelector("input[name=mode]:checked").value, check_social: $("check-social").checked,
   };
+  $("scan-btn").disabled = true;
   try {
     const r = await fetch("/api/scans", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const data = await r.json().catch(() => ({}));
     if (!r.ok) { err.textContent = data.detail || "Something went wrong. Please try again."; err.hidden = false; return; }
-    Object.assign(S, fresh(), { mode: body.mode, kind: "scan" });
-    S.site = url;
+    wipe();
+    Object.assign(S, { mode: body.mode, kind: "scan", site: url });
+    updateButton();
+    $("options").open = false;
     begin(data.id, `Scanning ${url.replace(/^https?:\/\//, "")}`, data.position);
   } catch {
     err.textContent = "We could not reach the server. Please check your connection and try again.";
     err.hidden = false;
+  } finally {
+    $("scan-btn").disabled = false;
   }
-});
+}
 
 const pre = new URLSearchParams(location.search).get("url");
 if (pre) $("site-url").value = pre;
@@ -154,14 +185,7 @@ function fail(msg) {
   $("failure-msg").textContent = msg;
   show("failure");
 }
-$("failure-back").addEventListener("click", reset);
-$("again").addEventListener("click", reset);
-function reset() {
-  if (S.es) S.es.close();
-  Object.assign(S, fresh());
-  show("start");
-  $("site-url").focus();
-}
+$("failure-back").addEventListener("click", () => { $("failure").hidden = true; $("site-url").focus(); $("site-url").select(); });
 
 function finish() {
   S.done = true;
@@ -202,7 +226,7 @@ function render() {
   if (S.jsNotice) b.append(h("p", { class: "banner" }, "Some of this website's content loads with JavaScript, so we may have found fewer links than are really there."));
   if (S.done && S.mode === "quick" && blocked.length && S.kind === "scan") {
     b.append(h("p", { class: "banner info" }, `${plural(uniq(blocked), "link", "links")} blocked our quick check. A Thorough scan tries harder to verify them.`,
-      h("button", { type: "button", class: "btn", onclick: () => { $("site-url").value = S.site; document.querySelector("input[name=mode][value=thorough]").checked = true; reset(); $("site-url").value = S.site; } }, "Set up a Thorough scan")));
+      h("button", { type: "button", class: "btn", onclick: () => { $("site-url").value = S.site; document.querySelector("input[name=mode][value=thorough]").checked = true; startScan(); } }, "Run a Thorough scan")));
   }
 
   // summary

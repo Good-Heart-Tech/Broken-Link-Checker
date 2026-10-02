@@ -26,33 +26,36 @@
   <main id="main" class="wrap">
     <noscript><p class="notice">This tool needs JavaScript to run. Please turn it on and reload.</p></noscript>
 
-    <!-- 1. Start -->
+    <!-- 1. Search bar: always at the top -->
+    <div class="searchbar">
+      <form id="scan-form" class="scan-form" novalidate autocomplete="off">
+        <label for="site-url" class="sr-only">Website address</label>
+        <input id="site-url" name="site" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="yournonprofit.org" required>
+        <button type="submit" id="scan-btn" class="btn btn-primary">Scan</button>
+      </form>
+      <p id="form-error" class="form-error" role="alert" hidden></p>
+    </div>
+
+    <details id="options" class="options" open>
+      <summary>Scan options</summary>
+      <div class="choices">
+        <fieldset class="choice-group">
+          <legend>What to check</legend>
+          <label class="choice"><input form="scan-form" type="radio" name="scope" value="site" checked><span><strong>Whole website</strong><small>Follows links from page to page</small></span></label>
+          <label class="choice"><input form="scan-form" type="radio" name="scope" value="page"><span><strong>One page</strong><small>Just the page you enter</small></span></label>
+        </fieldset>
+        <fieldset class="choice-group">
+          <legend>How careful</legend>
+          <label class="choice"><input form="scan-form" type="radio" name="mode" value="quick" checked><span><strong>Quick scan</strong><small>Fast. Best for most sites</small></span></label>
+          <label class="choice"><input form="scan-form" type="radio" name="mode" value="thorough"><span><strong>Thorough scan</strong><small>Slower. Double-checks links that block automated tools</small></span></label>
+        </fieldset>
+      </div>
+      <label class="inline-check"><input form="scan-form" type="checkbox" id="check-social"> Also try social media links (they often block checks)</label>
+    </details>
+
     <section id="start" class="hero">
       <h1>Find broken links on your website</h1>
-      <p class="lead">Paste your website address. We check every link and show you what needs fixing and where to find it.</p>
-
-      <form id="scan-form" class="scan-form" novalidate>
-        <div class="url-row">
-          <label for="site-url" class="sr-only">Website address</label>
-          <input id="site-url" name="url" type="text" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="yournonprofit.org" required>
-          <button type="submit" class="btn btn-primary">Check my site</button>
-        </div>
-        <p id="form-error" class="form-error" role="alert" hidden></p>
-
-        <div class="choices">
-          <fieldset class="choice-group">
-            <legend>What to check</legend>
-            <label class="choice"><input type="radio" name="scope" value="site" checked><span><strong>Whole website</strong><small>Follows links from page to page</small></span></label>
-            <label class="choice"><input type="radio" name="scope" value="page"><span><strong>One page</strong><small>Just the page you enter</small></span></label>
-          </fieldset>
-          <fieldset class="choice-group">
-            <legend>How careful</legend>
-            <label class="choice"><input type="radio" name="mode" value="quick" checked><span><strong>Quick scan</strong><small>Fast. Best for most sites</small></span></label>
-            <label class="choice"><input type="radio" name="mode" value="thorough"><span><strong>Thorough scan</strong><small>Slower. Double-checks links that block automated tools</small></span></label>
-          </fieldset>
-        </div>
-        <label class="inline-check"><input type="checkbox" id="check-social"> Also try social media links (they often block checks)</label>
-      </form>
+      <p class="lead">Paste your website address above. We check every link and show you what needs fixing and where to find it.</p>
       <p class="privacy">We do not store your results or your site. Everything stays in this browser tab.</p>
     </section>
 
@@ -94,7 +97,6 @@
         <label class="inline-check"><input type="checkbox" id="ex-all"> Include working links</label>
         <span class="spacer"></span>
         <button type="button" id="recheck" class="btn btn-soft">Re-check problem links</button>
-        <button type="button" id="again" class="btn btn-soft">Scan another site</button>
       </div>
       <p id="toast" class="toast" role="status" aria-live="polite"></p>
 
@@ -103,7 +105,7 @@
         <p id="platform-tip" class="tip" hidden></p>
         <div class="controls">
           <label class="sr-only" for="q">Search results</label>
-          <input id="q" type="search" placeholder="Search links, text, or pages" autocomplete="off">
+          <input id="q" name="filter-text" type="search" placeholder="Search these results" autocomplete="off" data-lpignore="true" data-form-type="other">
           <label class="sr-only" for="filter">Show</label>
           <select id="filter">
             <option value="all">All broken links</option>
@@ -132,7 +134,7 @@
       <details class="block fold" id="sec-ok">
         <summary><h3 id="h-ok">Working links</h3><span class="count" id="n-ok"></span></summary>
         <label class="sr-only" for="q-ok">Search working links</label>
-        <input id="q-ok" type="search" placeholder="Search working links" autocomplete="off">
+        <input id="q-ok" name="filter-ok" type="search" placeholder="Search working links" autocomplete="off" data-lpignore="true">
         <div id="t-ok"></div>
         <h4 id="h-skip" hidden>Not checked</h4>
         <div id="t-skip"></div>
@@ -142,7 +144,7 @@
     <section id="failure" class="card" hidden>
       <h2>We could not scan that</h2>
       <p id="failure-msg"></p>
-      <button type="button" id="failure-back" class="btn btn-primary">Try again</button>
+      <button type="button" id="failure-back" class="btn">Edit the address</button>
     </section>
   </main>
 
