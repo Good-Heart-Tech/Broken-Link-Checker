@@ -44,5 +44,6 @@ docker run --rm -p 8080:8080 broken-link-checker
 
 ## License
 
-Private for now. Planned release under AGPL-3.0-or-later (see the open source checklist in
-the plan). The Good Heart Tech name and logo remain trademarks of Good Heart Tech.
+Open source under [AGPL-3.0-or-later](LICENSE). If you run a modified public copy, the AGPL
+requires you to offer your changes as source. The Good Heart Tech name and logo remain
+trademarks of Good Heart Tech, so please rebrand forks. See [CONTRIBUTING.md](CONTRIBUTING.md).

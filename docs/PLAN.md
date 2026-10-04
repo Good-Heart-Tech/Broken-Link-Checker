@@ -3,7 +3,7 @@
 Status: **v1 built** (all milestones M0 to M5 and the code side of M6). Owner: Greg (Good Heart Tech).
 See [DEPLOY.md](DEPLOY.md) to run it on Sliplane and [BOT-BLOCKING-FINDINGS.md](BOT-BLOCKING-FINDINGS.md) for measured results.
 Target home: `links.nonprofittools.org`, listed in the [Nonprofit Tools Hub](https://nonprofittools.org/).
-Repo: private now, AGPL-3.0 later (see [Open source readiness](#13-open-source-readiness)).
+Repo: public, AGPL-3.0-or-later (see [Open source readiness](#13-open-source-readiness)).
 
 Companion doc: [BOT-BLOCKING.md](BOT-BLOCKING.md) (how we avoid false 403s, in detail).
 
@@ -612,16 +612,16 @@ Sizes: S is an evening, M is a few evenings, L is a couple of weeks of evenings.
 
 Do these from day one so flipping the repo public is boring:
 
-- [ ] `# SPDX-License-Identifier: AGPL-3.0-or-later` at the top of every source file
-- [ ] `LICENSE` (AGPL-3.0 text) added at release time, copyright "Good Heart Tech"
-- [ ] No secrets, customer names, or internal URLs in code, docs, fixtures, or git history
+- [x] `# SPDX-License-Identifier: AGPL-3.0-or-later` at the top of every source file
+- [x] `LICENSE` (AGPL-3.0 text) added at release time, copyright "Good Heart Tech"
+- [x] No secrets, customer names, or internal URLs in code, docs, fixtures, or git history
       (the example.org scans stay as notes, not saved page copies of a real org)
-- [ ] Dependency license audit (FastAPI, uvicorn, curl_cffi, selectolax are MIT or
+- [x] Dependency license audit (FastAPI, uvicorn, curl_cffi, selectolax are MIT or
       compatible with AGPL)
-- [ ] AGPL section 13 means anyone running a modified public copy must offer the source.
+- [x] AGPL section 13 means anyone running a modified public copy must offer the source.
       Add a visible "Source code" link in the footer at release
-- [ ] `CONTRIBUTING.md` with the simple-code rules from `AGENTS.md`
-- [ ] Brand assets note: AGPL covers the code; the GHT logo and name stay trademarks. Say
+- [x] `CONTRIBUTING.md` with the simple-code rules from `AGENTS.md`
+- [x] Brand assets note: AGPL covers the code; the GHT logo and name stay trademarks. Say
       so in the README so forks rebrand
 - [ ] Public README that explains the bot-blocking approach and its limits honestly
 

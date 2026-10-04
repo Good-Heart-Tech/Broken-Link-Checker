@@ -8,7 +8,7 @@ outbound requests.
 
 A free website broken-link scanner for nonprofits, hosted at `links.nonprofittools.org`
 and listed in the Nonprofit Tools Hub. Single Docker container, **no storage volume**,
-in-memory state only. Private repo now, AGPL-3.0-or-later when released.
+in-memory state only. Public repo, AGPL-3.0-or-later.
 
 ## Do
 
