@@ -1,12 +1,12 @@
-# Deploying to Sliplane
+# Self-hosting
 
-One container, no volume. Live at `links.nonprofittools.org`.
+One container, no volume. Any Docker host works. The free hosted version is at [links.nonprofittools.org](https://links.nonprofittools.org).
 
 ## Settings
 
 | Setting | Value |
 |---------|-------|
-| Source | This GitHub repo, `main` branch, build from the `Dockerfile` |
+| Source | This repo, build from the `Dockerfile` |
 | Port | **8080** (the image reads `PORT` and defaults to 8080) |
 | Volume | None. Do not add one |
 | Health check path | `/healthz` (returns `{"status":"ok","app":"broken-link-checker","version":"..."}`) |
@@ -16,15 +16,15 @@ One container, no volume. Live at `links.nonprofittools.org`.
 
 ## Traffic path
 
-Browser -> Cloudflare -> published application route (tunnel) -> Sliplane container on port 8080.
+Browser -> CDN or reverse proxy (HTTPS) -> container on port 8080.
 
 - The app reads the visitor's address from `CF-Connecting-IP` (then `X-Forwarded-For`) for the
-  hourly rate limit. **Do not also expose the Sliplane public URL**, or someone could send a fake
-  header and dodge the limit. Use only the Cloudflare route.
+  hourly rate limit. Put the container behind a proxy that sets that header, and **do not also
+  expose the container directly**, or someone could send a fake header and dodge the limit.
 - Scans stream progress with Server-Sent Events. If progress ever stalls in the browser, check that
-  Cloudflare is not buffering `/api/scans/*/events` (the app sends `X-Accel-Buffering: no` and a
+  your proxy is not buffering `/api/scans/*/events` (the app sends `X-Accel-Buffering: no` and a
   keep-alive every 15 seconds).
-- The app sets `frame-ancestors` so the Nonprofit Tools Hub can embed it. Other sites cannot.
+- The app sets `frame-ancestors` so the Nonprofit Tools Hub can embed it. Other sites cannot. Change this in `app/main.py` if you embed your own copy.
 
 ## Optional environment variables
 
@@ -42,7 +42,7 @@ Browser -> Cloudflare -> published application route (tunnel) -> Sliplane contai
 | `THOROUGH_HOST_BUDGET_SECONDS` | 60 | Time Thorough mode spends per blocked site |
 | `SCAN_PROXY_URL` | unset | Optional outbound proxy for Thorough mode only |
 | `SCAN_IDENT_HEADER` | unset | Adds an `X-Scanner` header so site owners can identify us |
-| `DENY_HOSTS` | `links.nonprofittools.org` | Never scan these (the tool itself, so it cannot scan itself in a loop). Your own domains are fine to scan |
+| `DENY_HOSTS` | the tool's own host | Never scan these, so the tool cannot scan itself in a loop. Set it to your own hostname |
 | `PORT` | 8080 | Listen port |
 
 Never set `ALLOW_PRIVATE_TARGETS`. It exists for tests and the app refuses to start with it when
@@ -50,11 +50,10 @@ Never set `ALLOW_PRIVATE_TARGETS`. It exists for tests and the app refuses to st
 
 ## Checking a deploy
 
-1. `https://links.nonprofittools.org/healthz` shows the new `version`.
+1. `/healthz` on your host shows the new `version`.
 2. Scan a small site you know. Expect results in under a minute.
-3. Open the Tools Hub (`?tool=links`) and confirm the tool loads in the frame.
-4. Logs show only scan ids, hosts, and counts. They never contain full URLs or page text.
+3. Logs show only scan ids, hosts, and counts. They never contain full URLs or page text.
 
 ## Rolling back
 
-Redeploy the previous commit from the Sliplane Events tab. There is no data to migrate.
+Redeploy the previous commit or image. There is no data to migrate.

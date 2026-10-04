@@ -2,7 +2,7 @@
 
 Measured on 2026-10-01 from a Windows laptop on a normal connection, using
 `python -m app.cli example.org --pages 60`. This is **not** the cloud-IP test from the plan, so
-treat results as a lower bound on blocking. Repeat from the Sliplane container before quoting numbers.
+treat results as a lower bound on blocking. Repeat from the production container before quoting numbers.
 
 ## Headline
 
@@ -54,11 +54,11 @@ These are good examples of what the tool is for:
 
 `tag.simpli.fi` (an advertising tracker) reported "Website not found". This laptop uses DNS
 filtering that blocks ad networks, so that result is likely a local artifact, not a dead domain.
-On the Sliplane container it should resolve normally. Check after deploy.
+On the production container it should resolve normally. Check after deploy.
 
 ## Still to measure
 
-- The same scan from the Sliplane container (cloud IP reputation).
+- The same scan from the production container (cloud IP reputation).
 - How often the circuit breaker trips on a healthy site under the cloud IP.
 - Whether Thorough mode's Safari and Firefox profiles recover anything Chrome could not on real
   sites (they do against the test fixture).

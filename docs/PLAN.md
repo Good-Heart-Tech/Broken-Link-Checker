@@ -1,7 +1,7 @@
 # Implementation plan: Free Broken Link Checker
 
-Status: **v1 built** (all milestones M0 to M5 and the code side of M6). Owner: Greg (Good Heart Tech).
-See [DEPLOY.md](DEPLOY.md) to run it on Sliplane and [BOT-BLOCKING-FINDINGS.md](BOT-BLOCKING-FINDINGS.md) for measured results.
+Status: **v1 built** (all milestones M0 to M5 and the code side of M6). Owner: Good Heart Tech.
+See [SELF-HOSTING.md](SELF-HOSTING.md) to run it yourself and [BOT-BLOCKING-FINDINGS.md](BOT-BLOCKING-FINDINGS.md) for measured results.
 Target home: `links.nonprofittools.org`, listed in the [Nonprofit Tools Hub](https://nonprofittools.org/).
 Repo: public, AGPL-3.0-or-later (see [Open source readiness](#13-open-source-readiness)).
 
@@ -56,8 +56,8 @@ problems instead of just listing them.
 | Exports | Generated in the browser from results already on the page | Server never stores or re-serves results |
 | Scan modes | **Quick** (default) and **Thorough** | Speed matters; blocker evasion is slower. User chooses |
 | Result buckets | Broken, Could not verify, Worth a look, Working | Honest reporting is the whole point |
-| Abuse protection | Per-IP rate limit, global scan cap with a visible queue, per-site pacing. No Turnstile (Greg's call) | Public free tool that makes outbound requests |
-| Hosting | Any Docker host with HTTPS. Sliplane is the likely fit (existing GHT/HH precedent) | Single container, env-var config |
+| Abuse protection | Per-IP rate limit, global scan cap with a visible queue, per-site pacing. No Turnstile (project decision) | Public free tool that makes outbound requests |
+| Hosting | Any Docker host with HTTPS. Any Docker host works | Single container, env-var config |
 | License | AGPL-3.0-or-later, applied at open-source time. SPDX headers from day one | Planned |
 
 ---
@@ -632,7 +632,7 @@ Do these from day one so flipping the repo public is boring:
 | # | Question | Assumed default |
 |---|----------|-----------------|
 | 1 | Subdomain and name | **Decided:** `links.nonprofittools.org` |
-| 2 | Docker host | **Decided:** Sliplane, published through a Cloudflare tunnel route |
+| 2 | Docker host | **Decided:** any Docker host behind a CDN or reverse proxy |
 | 3 | Cloudflare Turnstile | **Decided: not needed** |
 | 4 | Per-scan caps | **Decided:** 5,000 URLs in 10 minutes (500 pages) |
 | 5 | Budget for a rotating or residential outbound proxy | None. Off by default; revisit only if M1 shows IP reputation is the main cause |
