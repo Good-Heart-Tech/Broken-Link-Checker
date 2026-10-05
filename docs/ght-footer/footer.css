@@ -1,12 +1,12 @@
 /* Good Heart Tech standard app footer, light mode. Uses the kit variables from ght-variables.css.
-   Donate button is white on huduPrimary (4.7:1), which passes AA for its small label. */
-.ght-footer { width: 100%; margin-top: auto; padding: 22px 24px 26px; text-align: center; background: color-mix(in srgb, var(--ght-palette-hudu-light) 30%, white); border-top: 1px solid var(--ght-palette-hudu-light); color: var(--ght-palette-charcoal); }
+   Donate button is white on primaryDark (4.7:1), which passes AA for its small label. */
+.ght-footer { width: 100%; margin-top: auto; padding: 22px 24px 26px; text-align: center; background: color-mix(in srgb, var(--ght-palette-primary-tint) 30%, white); border-top: 1px solid var(--ght-palette-primary-tint); color: var(--ght-palette-charcoal); }
 .ght-footer-note { max-width: 52rem; margin: 0 auto 16px; font-size: .8125rem; font-style: italic; }
 .ght-footer-row { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
 .ght-footer-logo img { display: block; height: 30px; width: auto; }
 .ght-footer-copy { font-size: .9375rem; }
-.ght-footer-donate { display: inline-flex; line-height: 1.2; align-items: center; gap: 8px; padding: 9px 22px; border-radius: 8px; background: var(--ght-palette-hudu-primary); color: var(--ght-palette-white); font-weight: var(--ght-font-weight-semibold); text-decoration: none; }
+.ght-footer-donate { display: inline-flex; line-height: 1.2; align-items: center; gap: 8px; padding: 9px 22px; border-radius: 8px; background: var(--ght-palette-primary-dark); color: var(--ght-palette-white); font-weight: var(--ght-font-weight-semibold); text-decoration: none; }
 .ght-footer-donate:hover { background: var(--ght-palette-rich-black); color: var(--ght-palette-white); }
 .ght-footer-github { display: inline-flex; color: var(--ght-palette-rich-black); }
-.ght-footer-github:hover { color: var(--ght-palette-hudu-primary); }
+.ght-footer-github:hover { color: var(--ght-palette-primary-dark); }
 .ght-footer a:focus-visible { outline: 3px solid var(--ght-palette-primary); outline-offset: 3px; }

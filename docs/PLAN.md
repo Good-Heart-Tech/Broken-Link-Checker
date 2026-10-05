@@ -154,9 +154,9 @@ Revisit if partners ask.
 
 ### 3.7 Visual direction
 
-Light and airy. White page, lots of space, rich black headings, charcoal body text, hudu
-light (`#D6DDFF`) for soft cards and borders, primary (`#7189FF`) only for the main
-button and accents. Hudu primary (`#586CD0`) for small text links (contrast rules in the
+Light and airy. White page, lots of space, rich black headings, charcoal body text, primary
+tint (`#D6DDFF`) for soft cards and borders, primary (`#7189FF`) only for the main
+button and accents. Primary dark (`#586CD0`) for small text links (contrast rules in the
 brand kit). System UI sans stack per `BRAND.md` (the Tools Hub uses Noto Sans; see Open
 questions). Heart icon top left. Friendly, nonprofit-partner voice, no em dashes, no
 jargon in user-facing text.
