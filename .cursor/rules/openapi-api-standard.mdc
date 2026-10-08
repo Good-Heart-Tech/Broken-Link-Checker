@@ -1,0 +1,13 @@
+---
+description: GHT OpenAPI standard and public nonprofit tool API security
+globs: "{**/app/main.py,**/backend/app/main.py,**/src/api.*,**/openapi/**,**/wrangler.toml,**/wrangler.jsonc}"
+alwaysApply: false
+---
+
+# GHT OpenAPI API standard
+
+Canonical doc: `ght-engineering-standards/openapi-api-standard.md` in **Private-Internal-GitBook** (GHT only — not Honey House).
+
+- Internal/integrator APIs: `/api/openapi.json` + `/api/docs` (gate with Access/admin); export `openapi/openapi.json` on release.
+- **Public nonprofit tools** (nonprofittools.org): no anonymous Swagger/OpenAPI on the public internet; UI-only or same-origin JSON; rate limits; repo export optional for engineering.
+- Honey House/WOSP: use their repo’s decided doc, not this rule.
